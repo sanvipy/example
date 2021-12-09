@@ -1,0 +1,42 @@
+podTemplate(containers: [
+    containerTemplate(name: 'terraform', image: 'hashicorp/terraform:latest', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'zip', image: 'joshkeegan/zip:latest', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'golang', image: 'golang:1.16.5', command: 'sleep', args: '99d')
+    ]) {
+
+
+    node(POD_LABEL) {
+        stage('Get a Golang project') {
+            git url: 'https://github.com/sanvipy/example.git', branch: 'master'
+            container('golang') {
+                stage('Build a Go project') {
+                    sh ' cd hello && go build'
+                }
+            }
+        }
+        stage('Create a deployment') {
+            container('zip') {
+                dir('hello/') {
+                    sh 'zip deployment.zip hello'
+                }
+            }
+        }        
+        stage('Deploy to aws') {
+            container('terraform') {
+                dir('hello/') {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "aws-creds", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh '''
+                    terraform init
+                    terraform apply -auto-approve
+                    '''
+                    }
+                    
+                }
+            }
+        }        
+
+    }
+}
+
+
+
