@@ -7,3 +7,5 @@ terraform init \
         -backend-config="key=$key" \
         -backend-config="region=$region" \
         -reconfigure
+
+terraform apply -auto-approve
