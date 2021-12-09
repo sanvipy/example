@@ -8,4 +8,4 @@ terraform init \
         -backend-config="region=$region" \
         -reconfigure
 
-terraform apply -auto-approve
+terraform $1 -auto-approve
