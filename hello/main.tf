@@ -3,6 +3,10 @@ provider "aws" {
   profile = "mdx-demo"          
 }
 
+terraform {
+    backend "s3" {}  
+}
+
 // Lambda IAM role
 resource "aws_iam_role" "lambda_role" {
   name = "hellogoFunctionRole"
