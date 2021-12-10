@@ -2,74 +2,22 @@
 
 [![Go Reference](https://pkg.go.dev/badge/golang.org/x/example.svg)](https://pkg.go.dev/golang.org/x/example)
 
-This repository contains a collection of Go programs and libraries that
-demonstrate the language, standard libraries, and tools.
 
-## Clone the project
+Note:
 
-```
-$ git clone https://go.googlesource.com/example
-$ cd example
-```
-https://go.googlesource.com/example is the canonical Git repository.
-It is mirrored at https://github.com/golang/example.
-## [hello](hello/) and [stringutil](stringutil/)
+This is a fork of golang/example, for the purpose of demonstrating a simple Jenkins pipeline. A Jenkins file is added in /hello 
 
-```
-$ cd hello
-$ go build
-```
-A trivial "Hello, world" program that uses a stringutil package.
+1. It does 3 steps: build and package the app into zip, deploy an AWS lambda function and deploy the app into it
 
-Command [hello](hello/) covers:
+2. The pipeline pod utlizes 3 containers in total:  golang to build the app, zip to create a deployment package, terraform to deploy the app as an AWS lambda function 
 
-* The basic form of an executable command
-* Importing packages (from the standard library and the local repository)
-* Printing strings ([fmt](//golang.org/pkg/fmt/))
+3. Use a pipeline job with a choice field having option [apply, destroy] to utlize above Jenkinsfile
 
-Library [stringutil](stringutil/) covers:
+You will need a Jenkins running on a Kubernetes cluster and [this](https://github.com/sanvipy/eks-jenkins) will help you
 
-* The basic form of a library
-* Conversion between string and []rune
-* Table-driven unit tests ([testing](//golang.org/pkg/testing/))
+## Using this
 
-## [outyet](outyet/)
+1. Use Pipeline from SCM and point to this repo. Jenkinsfile is located in /hello 
 
-```
-$ cd outyet
-$ go build
-```
-A web server that answers the question: "Is Go 1.x out yet?"
+2.  Add a choic parameter with options [plan, apply, destroy]
 
-Topics covered:
-
-* Command-line flags ([flag](//golang.org/pkg/flag/))
-* Web servers ([net/http](//golang.org/pkg/net/http/))
-* HTML Templates ([html/template](//golang.org/pkg/html/template/))
-* Logging ([log](//golang.org/pkg/log/))
-* Long-running background processes
-* Synchronizing data access between goroutines ([sync](//golang.org/pkg/sync/))
-* Exporting server state for monitoring ([expvar](//golang.org/pkg/expvar/))
-* Unit and integration tests ([testing](//golang.org/pkg/testing/))
-* Dependency injection
-* Time ([time](//golang.org/pkg/time/))
-
-## [appengine-hello](appengine-hello/)
-
-A trivial "Hello, world" App Engine application intended to be used as the
-starting point for your own code. Please see
-[Google App Engine SDK for Go](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Go)
-and [Quickstart for Go in the App Engine Standard Environment](https://cloud.google.com/appengine/docs/standard/go/quickstart).
-
-## [gotypes](gotypes/)
-
-The `go/types` package is a type-checker for Go programs. It is one of the most
-complex packages in Go's standard library, so we have provided this tutorial to
-help you find your bearings. It comes with several example programs that you
-can obtain using `go get` and play with as you learn to build tools that analyze
-or manipulate Go programs.
-
-## [template](template/)
-
-A trivial web server that demonstrates the use of the
-[`template` package](https://golang.org/pkg/text/template/)'s `block` feature.
