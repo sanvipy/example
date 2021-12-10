@@ -8,4 +8,10 @@ terraform init \
         -backend-config="region=$region" \
         -reconfigure
 
-terraform $1 -auto-approve
+
+if [[ "$1" = "apply" ]] || [[ "$1" = "destroy" ]]
+then
+    terraform $1 -auto-approve
+else
+    terraform plan
+fi
